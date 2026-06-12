@@ -4,17 +4,72 @@
   box-sizing: border-box;
 }
 
+html, body {
+  min-height: 100%;
+}
+
 body {
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  background-color: #e8e8e8;
-  color: #333;
+  background-color: #000;
+  color: #e6e6e6;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Galaxy background ── */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+}
+
+body::before {
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(60, 30, 120, 0.35), transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(20, 60, 130, 0.30), transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(120, 40, 130, 0.20), transparent 60%),
+    #03030a;
+}
+
+body::after {
+  /* layered starfields using radial-gradients */
+  background-image:
+    radial-gradient(1px 1px at 23px 47px, #ffffff, transparent),
+    radial-gradient(1px 1px at 91px 130px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 175px 60px, #ffffff, transparent),
+    radial-gradient(1px 1px at 240px 200px, #d6e4ff, transparent),
+    radial-gradient(1px 1px at 310px 90px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 50px 250px, #ffffff, transparent),
+    radial-gradient(1px 1px at 380px 30px, #ffffff, transparent),
+    radial-gradient(1px 1px at 420px 170px, #ffe9c4, transparent),
+    radial-gradient(1px 1px at 130px 320px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 280px 360px, #ffffff, transparent),
+    radial-gradient(1px 1px at 460px 260px, #ffffff, transparent),
+    radial-gradient(1px 1px at 70px 410px, #ffffff, transparent),
+    radial-gradient(1px 1px at 350px 480px, #c9d6ff, transparent),
+    radial-gradient(1.5px 1.5px at 200px 450px, #ffffff, transparent),
+    radial-gradient(1px 1px at 500px 380px, #ffffff, transparent);
+  background-repeat: repeat;
+  background-size: 520px 520px;
+  opacity: 0.85;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.55; }
+  to   { opacity: 0.95; }
 }
 
 .container {
   max-width: 760px;
   margin: 0 auto;
   padding: 80px 24px 48px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Header ── */
@@ -40,7 +95,13 @@ body {
   border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 2px solid #ddd;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.profile-photo:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.45);
 }
 
 .name-row {
@@ -57,6 +118,7 @@ body {
   background-color: #22c55e;
   flex-shrink: 0;
   animation: blink 1.4s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
 }
 
 @keyframes blink {
@@ -67,8 +129,9 @@ body {
 .name {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #111;
+  color: #fff;
   letter-spacing: -0.02em;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
 .social-links {
@@ -82,10 +145,10 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #555;
+  color: #cfcfcf;
   text-decoration: none;
   font-size: 0.875rem;
-  transition: color 0.2s;
+  transition: color 0.2s, text-shadow 0.2s;
 }
 
 .social-links a svg {
@@ -93,13 +156,14 @@ body {
 }
 
 .social-links a:hover {
-  color: #22c55e;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 .title {
   margin-top: 6px;
   font-size: 1rem;
-  color: #666;
+  color: #b8b8c8;
   font-weight: 400;
   padding-left: 24px;
 }
@@ -108,29 +172,31 @@ body {
 .tabs {
   display: flex;
   gap: 4px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   margin-bottom: 32px;
 }
 
 .tab {
   background: none;
   border: none;
-  color: #777;
+  color: #a0a0b0;
   font-size: 0.9rem;
   padding: 10px 20px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s, border-color 0.2s, text-shadow 0.2s;
   font-family: inherit;
 }
 
 .tab:hover {
-  color: #333;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 .tab.active {
-  color: #111;
-  border-bottom-color: #22c55e;
+  color: #fff;
+  border-bottom-color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.55);
 }
 
 /* ── Panels ── */
@@ -151,13 +217,36 @@ body {
 .panel h2 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #111;
+  color: #fff;
   margin-bottom: 16px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
 }
 
 .panel p {
   line-height: 1.7;
-  color: #555;
+  color: #cfcfd8;
+}
+
+/* ── Glow card base (shared) ── */
+.project-card,
+.timeline-card {
+  background: rgba(15, 15, 25, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
+}
+
+.project-card:hover,
+.timeline-card:hover {
+  border-color: rgba(255, 255, 255, 0.85);
+  background: rgba(25, 25, 40, 0.7);
+  box-shadow:
+    0 0 12px rgba(255, 255, 255, 0.35),
+    0 0 30px rgba(255, 255, 255, 0.25),
+    0 0 60px rgba(200, 220, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 /* ── Project Cards ── */
@@ -170,28 +259,19 @@ body {
 .project-card {
   display: block;
   text-decoration: none;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 20px 24px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.project-card:hover {
-  border-color: #22c55e;
-  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.12);
 }
 
 .project-card h3 {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #111;
+  color: #fff;
   margin-bottom: 6px;
 }
 
 .project-card p {
   font-size: 0.875rem;
-  color: #666;
+  color: #b8b8c8;
   line-height: 1.5;
 }
 
@@ -204,13 +284,14 @@ body {
 .project-links a {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #22c55e;
+  color: #e2e2ff;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s, text-shadow 0.2s;
 }
 
 .project-links a:hover {
-  color: #16a34a;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
 }
 
 .tech-tags {
@@ -223,8 +304,9 @@ body {
 .tech-tag {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #555;
-  background: #f0f0f0;
+  color: #d6d6e6;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 3px 10px;
   border-radius: 12px;
   letter-spacing: 0.02em;
@@ -243,7 +325,7 @@ body {
   top: 6px;
   bottom: 6px;
   width: 2px;
-  background: #ccc;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .timeline-item {
@@ -262,13 +344,14 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #ccc;
-  border: 2px solid #e8e8e8;
+  background: #cfcfd8;
+  border: 2px solid #03030a;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 .timeline-item.current .timeline-dot {
   background: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25), 0 0 10px rgba(34, 197, 94, 0.6);
 }
 
 .timeline-dot.pulse {
@@ -276,38 +359,36 @@ body {
 }
 
 @keyframes dotPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
-  50%      { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.08); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25), 0 0 10px rgba(34, 197, 94, 0.6); }
+  50%      { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1),  0 0 16px rgba(34, 197, 94, 0.4); }
 }
 
 .timeline-date {
   font-size: 0.8rem;
-  color: #888;
+  color: #a0a0b0;
   margin-bottom: 6px;
   font-weight: 500;
 }
 
 .timeline-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 16px 20px;
 }
 
 .timeline-item.current .timeline-card {
-  border-color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.15);
 }
 
 .timeline-card h3 {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #111;
+  color: #fff;
   margin-bottom: 4px;
 }
 
 .timeline-card p {
   font-size: 0.875rem;
-  color: #666;
+  color: #b8b8c8;
   line-height: 1.5;
 }
 
@@ -317,7 +398,8 @@ body {
   font-size: 0.75rem;
   font-weight: 600;
   color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.4);
   padding: 3px 10px;
   border-radius: 12px;
   letter-spacing: 0.02em;
