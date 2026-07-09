@@ -98,6 +98,20 @@ body {
   font-style: italic;
 }
 
+/* ── Model attribution ── */
+#model-credit {
+  position: fixed;
+  right: 10px;
+  bottom: 8px;
+  z-index: 16;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  color: rgba(216, 199, 154, 0.55);
+  text-decoration: none;
+  text-shadow: 0 1px 4px #000;
+}
+#model-credit:hover { color: rgba(216, 199, 154, 0.95); }
+
 /* ── Cinematic fade ── */
 #fade {
   position: fixed;

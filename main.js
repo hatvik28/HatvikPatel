@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -139,7 +140,7 @@ function buildLighting() {
   scene.add(dir);
 
   // Dramatic warm wash on the throne.
-  const spot = new THREE.SpotLight(0xffdda0, 320, 70, 0.55, 0.6, 2);
+  const spot = new THREE.SpotLight(0xffdda0, 420, 70, 0.55, 0.6, 2);
   spot.position.set(0, 24, -2);
   spot.target.position.set(0, 5, -15);
   spot.castShadow = true;
@@ -372,13 +373,56 @@ function buildDais() {
 }
 
 /* ─────────────────────────  THRONE  ──────────────────────── */
-/* The show throne is an asymmetric mound of hundreds of blades
-   fanning up and outward behind the seat. We model one real sword
-   (blade / crossguard / grip / pommel) and instance it ~260 times. */
+/* "Iron Throne" by The Mangle (sketchfab.com/pizzapizza), CC-BY-4.0.
+   Loaded as glTF; the old procedural throne remains as a fallback. */
 function buildThrone() {
   throneGroup = new THREE.Group();
   throneGroup.position.set(0, 3, -15); // atop the platform
 
+  // Invisible, generous click target so the throne is easy to select.
+  clickTarget = new THREE.Mesh(
+    new THREE.BoxGeometry(6.5, 9, 5.5),
+    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+  );
+  clickTarget.position.set(0, 4, 0);
+  throneGroup.add(clickTarget);
+  scene.add(throneGroup);
+
+  new GLTFLoader().load(
+    "assets/models/iron_throne/scene.gltf",
+    (gltf) => {
+      const model = gltf.scene;
+      model.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+          o.material.metalness = 0.35;
+          o.material.roughness = 0.55;
+          o.material.envMapIntensity = 0.9;
+        }
+      });
+      // Scale to ~7.5 units tall and rest its base on the dais.
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const s = 7.5 / size.y;
+      model.scale.setScalar(s);
+      box.setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      model.position.x -= center.x;
+      model.position.z -= center.z;
+      model.position.y -= box.min.y;
+
+      throneGroup.add(model);
+    },
+    undefined,
+    (err) => {
+      console.warn("Iron Throne model failed to load; using procedural fallback.", err);
+      buildProceduralThrone();
+    }
+  );
+}
+
+function buildProceduralThrone() {
   const steel = new THREE.MeshStandardMaterial({
     color: 0x9da3aa, metalness: 1.0, roughness: 0.38, envMapIntensity: 1.1
   });
@@ -442,15 +486,6 @@ function buildThrone() {
     throneGroup.add(p);
   }
 
-  // Invisible, generous click target so the throne is easy to select.
-  clickTarget = new THREE.Mesh(
-    new THREE.BoxGeometry(7.5, 12, 6),
-    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-  );
-  clickTarget.position.set(0, 4.5, -0.5);
-  throneGroup.add(clickTarget);
-
-  scene.add(throneGroup);
 }
 
 /* Positions/orientations for ~260 swords: a tall central fan behind
