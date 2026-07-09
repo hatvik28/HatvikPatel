@@ -87,13 +87,6 @@ body {
   text-shadow: 0 2px 12px #000, 0 0 30px #000;
 }
 #hall-hud.dim { opacity: 0; }
-.hud-title {
-  font-family: "Cinzel", serif;
-  font-weight: 900;
-  font-size: clamp(1.8rem, 5vw, 3.4rem);
-  letter-spacing: 0.14em;
-  color: #eadfbf;
-}
 .hud-sub {
   margin-top: 10px;
   font-size: clamp(0.85rem, 2vw, 1.05rem);
