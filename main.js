@@ -584,8 +584,8 @@ function bindEvents() {
     if (dragging) {
       const dx = e.clientX - lastX, dy = e.clientY - lastY;
       moved += Math.abs(dx) + Math.abs(dy);
-      yaw -= dx * 0.0026;
-      pitch -= dy * 0.0026;
+      yaw += dx * 0.0026;
+      pitch += dy * 0.0026;
       applyLook();
       lastX = e.clientX; lastY = e.clientY;
     } else if (!traveling && !cardOpen) {
